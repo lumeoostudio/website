@@ -99,7 +99,7 @@ export const WhatWeOffer = () => {
 							/>
 						</li>
 						<li className="size-fit bg-white p-3">
-							<NotionDuoToneIcon className="size-6" />
+							<NotionDuoToneIcon className="size-6 text-black" />
 						</li>
 						<li className="size-fit bg-white p-3">
 							<HugeiconsIcon

@@ -2,14 +2,11 @@ import {
 	AdobeAfterEffectIcon,
 	AdobeIllustratorIcon,
 	AdobePhotoshopIcon,
-	AdobeXdIcon,
-	FigmaIcon,
 	FramerIcon,
-	Notion02Icon,
-	NotionIcon,
 	WebflowIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+
 import { FigmaDuoToneIcon } from "#/components/svg/FigmaDuoToneIcon";
 import { NotionDuoToneIcon } from "#/components/svg/NotionDuotoneIcon";
 

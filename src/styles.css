@@ -11,8 +11,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: "Sofia Pro", "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist", sans-serif;
 }
+
 body {
   @apply m-0;
   font-family: "Geist", sans-serif;
@@ -146,7 +147,7 @@ body {
     calc(var(--radius) * 2.6);
   --font-heading: var(--font-sans);
   --font-sans: 'Geist Variable', sans-serif;
-  --font-secondary: "Geist Mono", sans-serif;
+  --font-secondary: "Geist Mono", monospace;
   --font-tertiary: "Inter", sans-serif;
 }
 

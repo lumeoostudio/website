@@ -8,7 +8,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import { FigmaDuoToneIcon } from "#/components/svg/FigmaDuoToneIcon";
-import { NotionDuoToneIcon } from "#/components/svg/NotionDuotoneIcon";
+import { NotionDuoToneIcon } from "#/components/svg/NotionDuoToneIcon";
 
 export const WhatWeOffer = () => {
 	const offers = [

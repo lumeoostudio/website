@@ -11,6 +11,10 @@
   "files.associations": {
     "*.css": "tailwindcss"
   },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": true,
+    "source.organizeImports.biome": true
+  },
   "css.lint.unknownAtRules": "ignore",
   "scss.lint.unknownAtRules": "ignore"
 }

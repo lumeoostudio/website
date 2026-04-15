@@ -45,7 +45,7 @@ export const Header = () => {
 
 			<a
 				href="mailto:hello@lumeoo.studio"
-				className="rounded-full border border-[#353535] bg-primary px-5 py-2.5 text-base text-white leading-6 tracking-tight shadow-[-13px_20px_18px_rgba(0,0,0,0.02),-7px_15px_15px_rgba(0,0,0,0.05),-3px_11px_11px_rgba(0,0,0,0.08),-1px_3px_6px_rgba(0,0,0,0.1)] backdrop-blur-[12.5px]"
+				className="rounded-full border border-[#353535] bg-primary px-5 py-2.5 font-tertiary text-base text-white leading-6 tracking-tight shadow-[-13px_20px_18px_rgba(0,0,0,0.02),-7px_15px_15px_rgba(0,0,0,0.05),-3px_11px_11px_rgba(0,0,0,0.08),-1px_3px_6px_rgba(0,0,0,0.1)] backdrop-blur-[12.5px]"
 			>
 				Email Us
 			</a>

@@ -44,10 +44,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body
 				suppressHydrationWarning
-				className="font-sans antialiased wrap-anywhere flex flex-col min-h-dvh"
+				className="wrap-anywhere flex min-h-dvh flex-col font-sans antialiased"
 			>
 				<Header />
-				{children}
+				<main className="flex flex-1 flex-col">{children}</main>
 				<Footer />
 				<TanStackDevtools
 					config={{

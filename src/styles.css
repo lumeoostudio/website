@@ -4,7 +4,7 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/jetbrains-mono";
 @import "@fontsource-variable/geist";
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 @plugin "@tailwindcss/typography";
 
@@ -32,6 +32,8 @@ body {
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.5863 0 0); /* #7c7c7c */
   --secondary-foreground: oklch(1 0 0);
+  --tertiary: oklch(0.9761 0 0); /* #f7f7f7 */
+  --tertiary-foreground: oklch(0.1776 0 0);
   --muted: oklch(0.5103 0 0); /* #666666 */
   --muted-foreground: oklch(1 0 0);
   --accent: oklch(0.97 0 0);
@@ -69,6 +71,8 @@ body {
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
+  --tertiary: oklch(0.35 0 0);
+  --tertiary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
@@ -104,6 +108,8 @@ body {
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-tertiary: var(--tertiary);
+  --color-tertiary-foreground: var(--tertiary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
@@ -140,7 +146,8 @@ body {
     calc(var(--radius) * 2.6);
   --font-heading: var(--font-sans);
   --font-sans: 'Geist Variable', sans-serif;
-  --font-secondary: "Inter", sans-serif;
+  --font-secondary: "Geist Mono", sans-serif;
+  --font-tertiary: "Inter", sans-serif;
 }
 
 @layer base {

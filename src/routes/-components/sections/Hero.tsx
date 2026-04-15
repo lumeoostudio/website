@@ -2,7 +2,7 @@ import { ChartUpIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "#/components/ui/button";
 
-export const HeroSection = () => {
+export const Hero = () => {
 	return (
 		<section className="mx-auto flex w-full flex-col items-center gap-25 py-20">
 			<div className="flex w-full max-w-4xl flex-1 flex-col items-center gap-12">

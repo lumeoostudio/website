@@ -1,4 +1,4 @@
-export const HowWeWorkSection = () => {
+export const HowWeWork = () => {
 	const steps = [
 		{
 			step: "STEP 1",

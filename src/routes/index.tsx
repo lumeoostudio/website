@@ -3,6 +3,7 @@ import { Hero } from "./-components/sections/Hero";
 import { HowWeWork } from "./-components/sections/HowWeWork";
 import { OurWorks } from "./-components/sections/OurWorks";
 import { WhatWeOffer } from "./-components/sections/WhatWeOffer";
+import { WhyChooseUs } from "./-components/sections/WhyChooseUs";
 
 export const Route = createFileRoute("/")({ component: App });
 
@@ -13,6 +14,7 @@ function App() {
 			<HowWeWork />
 			<WhatWeOffer />
 			<OurWorks />
+			<WhyChooseUs />
 		</>
 	);
 }

@@ -1,15 +1,3 @@
-import {
-	AdobeAfterEffectIcon,
-	AdobeIllustratorIcon,
-	AdobePhotoshopIcon,
-	FramerIcon,
-	WebflowIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-
-import { FigmaDuoToneIcon } from "#/components/svg/FigmaDuoToneIcon";
-import { NotionDuoToneIcon } from "#/components/svg/NotionDuoToneIcon";
-
 export const OurWorks = () => {
 	return (
 		<section className="bg-[#F9F9FA]">

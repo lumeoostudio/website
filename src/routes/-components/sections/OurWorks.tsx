@@ -1,9 +1,6 @@
-export const OurWorks = () => {
-	const works = Array.from({ length: 10 }, (_, index) => ({
-		src: `/assets/our-works/works-${index + 1}.webp`,
-		alt: `Our Work ${index + 1}`,
-	}));
-
+export const OurWorks: React.FC<{ works: { src: string; alt: string }[] }> = ({
+	works,
+}) => {
 	return (
 		<section className="mx-auto flex w-full max-w-340 flex-col items-stretch gap-16 px-16 py-30">
 			<div className="flex flex-col gap-6">

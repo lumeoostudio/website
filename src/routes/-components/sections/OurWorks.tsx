@@ -1,4 +1,9 @@
 export const OurWorks = () => {
+	const works = Array.from({ length: 10 }, (_, index) => ({
+		src: `/assets/our-works/works-${index + 1}.webp`,
+		alt: `Our Work ${index + 1}`,
+	}));
+
 	return (
 		<section className="mx-auto flex w-full max-w-340 flex-col items-stretch gap-16 px-16 py-30">
 			<div className="flex flex-col gap-6">
@@ -12,56 +17,14 @@ export const OurWorks = () => {
 				</h1>
 			</div>
 			<ul className="grid grid-cols-12 gap-x-8 gap-y-6">
-				<img
-					src="/assets/our-works/works-1.webp"
-					alt="Our Work 1"
-					className="col-span-6"
-				/>
-				<img
-					src="/assets/our-works/works-2.webp"
-					alt="Our Work 2"
-					className="col-span-6"
-				/>
-				<img
-					src="/assets/our-works/works-3.webp"
-					alt="Our Work 3"
-					className="col-span-6"
-				/>
-				<img
-					src="/assets/our-works/works-4.webp"
-					alt="Our Work 4"
-					className="col-span-6"
-				/>
-				<img
-					src="/assets/our-works/works-5.webp"
-					alt="Our Work 5"
-					className="col-span-6"
-				/>
-				<img
-					src="/assets/our-works/works-6.webp"
-					alt="Our Work 6"
-					className="col-span-6"
-				/>
-				<img
-					src="/assets/our-works/works-7.webp"
-					alt="Our Work 7"
-					className="col-span-6"
-				/>
-				<img
-					src="/assets/our-works/works-8.webp"
-					alt="Our Work 8"
-					className="col-span-6"
-				/>
-				<img
-					src="/assets/our-works/works-9.webp"
-					alt="Our Work 9"
-					className="col-span-6"
-				/>
-				<img
-					src="/assets/our-works/works-10.webp"
-					alt="Our Work 10"
-					className="col-span-6"
-				/>
+				{works.map((work) => (
+					<img
+						key={work.src}
+						src={work.src}
+						alt={work.alt}
+						className="col-span-6"
+					/>
+				))}
 			</ul>
 		</section>
 	);

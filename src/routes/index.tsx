@@ -3,6 +3,7 @@ import { Hero } from "./-components/sections/Hero";
 import { HowWeWork } from "./-components/sections/HowWeWork";
 import { OurWorks } from "./-components/sections/OurWorks";
 import { Pricing } from "./-components/sections/Pricing";
+import { Testimonials } from "./-components/sections/Testimonials";
 import { WhatWeOffer } from "./-components/sections/WhatWeOffer";
 import { WhyChooseUs } from "./-components/sections/WhyChooseUs";
 
@@ -17,6 +18,7 @@ function App() {
 			<OurWorks />
 			<WhyChooseUs />
 			<Pricing />
+			<Testimonials />
 		</>
 	);
 }

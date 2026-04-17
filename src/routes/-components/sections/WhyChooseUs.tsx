@@ -40,7 +40,7 @@ export const WhyChooseUs = () => {
 									<p className="font-medium text-primary text-xl leading-[1.1]">
 										{reason.title}
 									</p>
-									<p className="text-pretty font-tertiary leading-[1.4] tracking-[-3%]">
+									<p className="font-tertiary text-primary/70 leading-[1.4] tracking-[-3%]">
 										{reason.description}
 									</p>
 								</div>

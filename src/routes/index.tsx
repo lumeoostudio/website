@@ -4,6 +4,7 @@ import { HowWeWork } from "./-components/sections/HowWeWork";
 import { OurWorks } from "./-components/sections/OurWorks";
 import { Pricing } from "./-components/sections/Pricing";
 import { Testimonials } from "./-components/sections/Testimonials";
+import { TheStudio } from "./-components/sections/TheStudio";
 import { WhatWeOffer } from "./-components/sections/WhatWeOffer";
 import { WhyChooseUs } from "./-components/sections/WhyChooseUs";
 
@@ -19,6 +20,7 @@ function App() {
 			<WhyChooseUs />
 			<Pricing />
 			<Testimonials />
+			<TheStudio />
 		</>
 	);
 }

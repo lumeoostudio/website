@@ -49,7 +49,7 @@ export const Pricing = () => {
 				<CardTitle className="flex flex-col font-medium text-primary text-xl leading-normal tracking-[-0.5px]">
 					{plan.title}
 				</CardTitle>
-				<p className="font-medium font-tertiary text-base leading-normal tracking-[-0.5px]">
+				<p className="font-medium font-tertiary text-base text-primary/70 leading-normal tracking-[-0.5px]">
 					{plan.description}
 				</p>
 			</CardHeader>

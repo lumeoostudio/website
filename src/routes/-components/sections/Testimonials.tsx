@@ -38,7 +38,7 @@ export const Testimonials = () => {
 						key={`${testimonial.name}-${index}`}
 						className="flex max-h-h-71.25 min-h-71.25 flex-col justify-between gap-4 bg-[#F9F9FA] p-6"
 					>
-						<p className="font-tertiary text-primary leading-[1.4] tracking-[-3%]">
+						<p className="font-tertiary text-primary/70 leading-[1.4] tracking-[-3%]">
 							{testimonial.quote}
 						</p>
 						<div className="flex items-center gap-3">
@@ -47,10 +47,10 @@ export const Testimonials = () => {
 								alt="Testimonial 1"
 							/>
 							<div className="flex flex-col gap-1">
-								<p className="font-medium font-tertiary text-primary leading-[1.4] tracking-[-3%]">
+								<p className="font-medium font-tertiary text-primary/70 leading-[1.4] tracking-[-3%]">
 									{testimonial.name}
 								</p>
-								<p className="font-tertiary text-secondary text-sm leading-[1.4] tracking-[-3%]">
+								<p className="font-tertiary text-primary/70 text-sm leading-[1.4] tracking-[-3%]">
 									{testimonial.role}
 								</p>
 							</div>

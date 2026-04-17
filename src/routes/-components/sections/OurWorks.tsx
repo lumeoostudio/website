@@ -25,17 +25,17 @@ export const OurWorks = () => {
 				<img
 					src="/assets/our-works/works-3.webp"
 					alt="Our Work 3"
-					className="col-span-4"
+					className="col-span-6"
 				/>
 				<img
 					src="/assets/our-works/works-4.webp"
 					alt="Our Work 4"
-					className="col-span-4"
+					className="col-span-6"
 				/>
 				<img
 					src="/assets/our-works/works-5.webp"
 					alt="Our Work 5"
-					className="col-span-4"
+					className="col-span-6"
 				/>
 				<img
 					src="/assets/our-works/works-6.webp"
@@ -45,12 +45,22 @@ export const OurWorks = () => {
 				<img
 					src="/assets/our-works/works-7.webp"
 					alt="Our Work 7"
-					className="col-span-3"
+					className="col-span-6"
 				/>
 				<img
 					src="/assets/our-works/works-8.webp"
 					alt="Our Work 8"
-					className="col-span-3"
+					className="col-span-6"
+				/>
+				<img
+					src="/assets/our-works/works-9.webp"
+					alt="Our Work 9"
+					className="col-span-6"
+				/>
+				<img
+					src="/assets/our-works/works-10.webp"
+					alt="Our Work 10"
+					className="col-span-6"
 				/>
 			</ul>
 		</section>

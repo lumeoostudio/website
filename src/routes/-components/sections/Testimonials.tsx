@@ -1,3 +1,6 @@
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useRef } from "react";
 import { SectionHeading } from "#/routes/-components/section-heading";
 
 const testimonials = [
@@ -24,7 +27,68 @@ const testimonials = [
 	},
 ];
 
+/** Two identical sequences for a seamless GSAP loop (translate by exactly half of track width). */
+const MARQUEE_LOOP = [...testimonials, ...testimonials] as const;
+
+const MARQUEE_SPEED_PX_PER_SEC = 48;
+/** Seconds — ease marquee to a stop / back to full speed on hover. */
+const HOVER_TIME_SCALE_DURATION = 0.2;
+
 export const Testimonials = () => {
+	const trackRef = useRef<HTMLUListElement>(null);
+	const tweenRef = useRef<gsap.core.Tween | null>(null);
+	const timeScaleEaseRef = useRef<gsap.core.Tween | null>(null);
+	const hoverRef = useRef(false);
+
+	const rampTimeScale = (target: number) => {
+		const tw = tweenRef.current;
+		if (!tw) return;
+		timeScaleEaseRef.current?.kill();
+		timeScaleEaseRef.current = gsap.to(tw, {
+			timeScale: target,
+			duration: HOVER_TIME_SCALE_DURATION,
+			ease: target === 0 ? "sine.out" : "sine.in",
+		});
+	};
+
+	useGSAP(
+		() => {
+			const track = trackRef.current;
+			if (!track) return;
+
+			if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+				return;
+			}
+
+			const setup = () => {
+				tweenRef.current?.kill();
+				timeScaleEaseRef.current?.kill();
+				gsap.set(track, { x: 0 });
+				const half = track.scrollWidth / 2;
+				if (half < 1) return;
+				tweenRef.current = gsap.to(track, {
+					x: -half,
+					duration: half / MARQUEE_SPEED_PX_PER_SEC,
+					ease: "none",
+					repeat: -1,
+				});
+				if (hoverRef.current) {
+					gsap.set(tweenRef.current, { timeScale: 0 });
+				}
+			};
+
+			setup();
+			const ro = new ResizeObserver(setup);
+			ro.observe(track);
+			return () => {
+				ro.disconnect();
+				timeScaleEaseRef.current?.kill();
+				tweenRef.current?.kill();
+			};
+		},
+		{ dependencies: [] },
+	);
+
 	return (
 		<section className="mx-auto flex w-full max-w-340 flex-col items-stretch gap-16 px-4 py-10 sm:px-10 sm:py-30 lg:px-16">
 			<SectionHeading eyebrow="OUR WORKS">
@@ -32,32 +96,51 @@ export const Testimonials = () => {
 				<br />
 				partners say.
 			</SectionHeading>
-			<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-				{testimonials.map((testimonial, index) => (
-					<li
-						key={`${testimonial.name}-${index}`}
-						className="flex max-h-h-71.25 min-h-71.25 flex-col justify-between gap-4 bg-[#F9F9FA] p-6"
-					>
-						<p className="font-tertiary text-primary/70 leading-[1.4] tracking-[-3%]">
-							{testimonial.quote}
-						</p>
-						<div className="flex items-center gap-3">
-							<img
-								src={testimonial.image}
-								alt="Testimonial 1"
-							/>
-							<div className="flex flex-col gap-1">
-								<p className="font-medium font-tertiary text-primary/70 leading-[1.4] tracking-[-3%]">
-									{testimonial.name}
-								</p>
-								<p className="font-tertiary text-primary/70 text-sm leading-[1.4] tracking-[-3%]">
-									{testimonial.role}
-								</p>
+			<div
+				className="overflow-hidden"
+				onPointerEnter={() => {
+					hoverRef.current = true;
+					rampTimeScale(0);
+				}}
+				onPointerLeave={() => {
+					hoverRef.current = false;
+					rampTimeScale(1);
+				}}
+			>
+				<ul
+					ref={trackRef}
+					className="m-0 flex w-max list-none gap-6 p-0"
+					aria-label="Partner testimonials"
+				>
+					{MARQUEE_LOOP.map((testimonial, index) => (
+						<li
+							key={`${testimonial.name}-${index}`}
+							className="flex max-h-71.25 min-h-71.25 max-w-100 shrink-0 flex-col justify-between gap-4 bg-[#F9F9FA] p-6 sm:min-w-95"
+						>
+							<p className="font-tertiary text-primary/70 leading-[1.4] tracking-[-3%]">
+								{testimonial.quote}
+							</p>
+							<div className="flex items-center gap-3">
+								<img
+									src={testimonial.image}
+									alt=""
+									width={48}
+									height={48}
+									className="size-12 shrink-0 rounded-full object-cover"
+								/>
+								<div className="flex min-w-0 flex-col gap-1">
+									<p className="font-medium font-tertiary text-primary/70 leading-[1.4] tracking-[-3%]">
+										{testimonial.name}
+									</p>
+									<p className="font-tertiary text-primary/70 text-sm leading-[1.4] tracking-[-3%]">
+										{testimonial.role}
+									</p>
+								</div>
 							</div>
-						</div>
-					</li>
-				))}
-			</ul>
+						</li>
+					))}
+				</ul>
+			</div>
 		</section>
 	);
 };

@@ -76,7 +76,7 @@ export const WhatWeOffer = () => {
 				</div>
 				<div className="flex flex-col gap-6">
 					<SectionEyebrow>WHAT WE OFFER</SectionEyebrow>
-					<ul className="flex items-center gap-3">
+					<ul className="flex flex-wrap items-center gap-3">
 						<li className="size-fit bg-white p-3">
 							<FigmaDuoToneIcon
 								className="size-6 fill-white"

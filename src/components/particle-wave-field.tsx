@@ -18,6 +18,11 @@ export type ParticleWaveFieldProps = {
   timeScale?: number;
   /** Shifts the wave phase so multiple instances feel distinct. Radians. */
   phaseOffset?: number;
+  /**
+   * When true, “near” (larger, stronger ripples) is drawn toward the **top** of the canvas instead of the bottom.
+   * `rippleOrigin.y` is still depth: 1 = near, 0 = far — so with invert, use `{ y: 1 }` for a top-anchored swell.
+   */
+  depthInvert?: boolean;
 };
 
 const BG = "#F9F9FA";
@@ -47,6 +52,7 @@ export function ParticleWaveField({
   ripplePointerMix = 0.65,
   timeScale = 1,
   phaseOffset = 0,
+  depthInvert = false,
 }: ParticleWaveFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,6 +66,7 @@ export function ParticleWaveField({
   const ripplePointerMixRef = useRef(ripplePointerMix);
   const timeScaleRef = useRef(timeScale);
   const phaseOffsetRef = useRef(phaseOffset);
+  const depthInvertRef = useRef(depthInvert);
 
   waveStrengthRef.current = waveStrength;
   rippleStrengthRef.current = rippleStrength;
@@ -68,6 +75,7 @@ export function ParticleWaveField({
   ripplePointerMixRef.current = ripplePointerMix;
   timeScaleRef.current = timeScale;
   phaseOffsetRef.current = phaseOffset;
+  depthInvertRef.current = depthInvert;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -137,9 +145,11 @@ export function ParticleWaveField({
 
       const yTop = 0.12;
       const yBottom = 0.985;
+      const invert = depthInvertRef.current;
 
       for (let j = 0; j < rows; j++) {
-        const wz = j / (rows - 1);
+        const rowT = j / (rows - 1);
+        const wz = invert ? 1 - rowT : rowT;
         const perspective = 0.14 + wz * 0.86;
         const grayT = 1 - wz;
         const depthAtten = 1 - wz;
@@ -164,9 +174,9 @@ export function ParticleWaveField({
           const wy = (waveA + waveB + ripple) * (0.38 + perspective * 0.62);
 
           const spread = 58 + perspective * 98;
-          const sx = width * 0.5 + wx * spread;
+          const px = invert ? width * 0.5 + wx * (width / 5.4) : width * 0.5 + wx * spread;
 
-          const syBase = height * lerp(yTop, yBottom, wz);
+          const syBase = height * lerp(yTop, yBottom, rowT);
           const verticalKick = wy * (18 + 10 * (1 - depthAtten)) * perspective;
           const sy = syBase - verticalKick;
 
@@ -175,7 +185,7 @@ export function ParticleWaveField({
           const c = lerpColor(grayT);
 
           ctx.beginPath();
-          ctx.arc(sx, sy, radius, 0, Math.PI * 2);
+          ctx.arc(px, sy, radius, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${alpha})`;
           ctx.fill();
         }

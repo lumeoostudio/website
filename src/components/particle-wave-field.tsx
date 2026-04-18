@@ -23,11 +23,17 @@ export type ParticleWaveFieldProps = {
    * `rippleOrigin.y` is still depth: 1 = near, 0 = far — so with invert, use `{ y: 1 }` for a top-anchored swell.
    */
   depthInvert?: boolean;
+  /** Fill behind particles each frame. Use `"transparent"` to overlay on imagery (clears the canvas). */
+  backgroundColor?: string;
+  /** Lighter particles for `transparent` overlays on dark backgrounds. */
+  tone?: "default" | "onDark";
 };
 
 const BG = "#F9F9FA";
 const GRAY_NEAR = { r: 136, g: 136, b: 136 };
 const GRAY_FAR = { r: 204, g: 204, b: 204 };
+const GRAY_ON_DARK_NEAR = { r: 210, g: 210, b: 210 };
+const GRAY_ON_DARK_FAR = { r: 118, g: 118, b: 118 };
 
 const DEFAULT_RIPPLE_ORIGIN: RippleOrigin = { x: 0.5, y: 1 };
 
@@ -43,6 +49,14 @@ function lerpColor(t: number) {
   };
 }
 
+function lerpColorOnDark(t: number) {
+  return {
+    r: Math.round(lerp(GRAY_ON_DARK_NEAR.r, GRAY_ON_DARK_FAR.r, t)),
+    g: Math.round(lerp(GRAY_ON_DARK_NEAR.g, GRAY_ON_DARK_FAR.g, t)),
+    b: Math.round(lerp(GRAY_ON_DARK_NEAR.b, GRAY_ON_DARK_FAR.b, t)),
+  };
+}
+
 export function ParticleWaveField({
   className,
   waveStrength = 1,
@@ -53,6 +67,8 @@ export function ParticleWaveField({
   timeScale = 1,
   phaseOffset = 0,
   depthInvert = false,
+  backgroundColor = BG,
+  tone = "default",
 }: ParticleWaveFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -67,6 +83,8 @@ export function ParticleWaveField({
   const timeScaleRef = useRef(timeScale);
   const phaseOffsetRef = useRef(phaseOffset);
   const depthInvertRef = useRef(depthInvert);
+  const backgroundColorRef = useRef(backgroundColor);
+  const toneRef = useRef(tone);
 
   waveStrengthRef.current = waveStrength;
   rippleStrengthRef.current = rippleStrength;
@@ -76,6 +94,8 @@ export function ParticleWaveField({
   timeScaleRef.current = timeScale;
   phaseOffsetRef.current = phaseOffset;
   depthInvertRef.current = depthInvert;
+  backgroundColorRef.current = backgroundColor;
+  toneRef.current = tone;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -128,8 +148,13 @@ export function ParticleWaveField({
 
     const draw = (now: number) => {
       const time = (now - t0) * 0.001 * timeScaleRef.current + phaseOffsetRef.current;
-      ctx.fillStyle = BG;
-      ctx.fillRect(0, 0, width, height);
+      const bg = backgroundColorRef.current;
+      if (bg === "transparent") {
+        ctx.clearRect(0, 0, width, height);
+      } else {
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, width, height);
+      }
 
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
@@ -182,7 +207,7 @@ export function ParticleWaveField({
 
           const radius = lerp(0.85, 3.2, perspective);
           const alpha = lerp(0.05, 0.94, perspective) * (0.5 + 0.5 * perspective);
-          const c = lerpColor(grayT);
+          const c = toneRef.current === "onDark" ? lerpColorOnDark(grayT) : lerpColor(grayT);
 
           ctx.beginPath();
           ctx.arc(px, sy, radius, 0, Math.PI * 2);

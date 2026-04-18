@@ -22,7 +22,7 @@ export const TheStudio = () => {
 						</h1>
 						<p className="flex-1 font-medium text-primary/70 text-xl leading-[1.4] tracking-[-3%]">
 							We founded Lumeo because we were tired of design that looked good
-							but didn't work. Three specialists, one shared conviction: that
+							but didn't work. Four specialists, one shared conviction: that
 							beautiful design and rigorous research are not opposites.
 						</p>
 					</div>

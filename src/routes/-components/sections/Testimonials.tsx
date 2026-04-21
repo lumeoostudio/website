@@ -32,7 +32,7 @@ export const Testimonials = () => {
   const { trackRef, onPointerEnter, onPointerLeave } = useInfiniteMarquee<HTMLUListElement>();
 
   return (
-    <section className="mx-auto flex w-full max-w-340 flex-col items-stretch gap-16 px-4 py-10 sm:px-10 sm:py-30 lg:px-16">
+    <section id="testimonials" className="mx-auto flex w-full max-w-340 flex-col items-stretch gap-16 px-4 py-10 sm:px-10 sm:py-30 lg:px-16">
       <SectionHeading eyebrow="OUR WORKS">
         What our
         <br />

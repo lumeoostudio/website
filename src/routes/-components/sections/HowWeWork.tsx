@@ -65,7 +65,7 @@ const steps: WorkStep[] = [
 
 export const HowWeWork = () => {
   return (
-    <section className="mx-auto flex w-full max-w-340 flex-col items-stretch gap-16 px-4 py-10 sm:px-10 sm:py-30 lg:px-16">
+    <section id="process" className="mx-auto flex w-full max-w-340 flex-col items-stretch gap-16 px-4 py-10 sm:px-10 sm:py-30 lg:px-16">
       <SectionHeading eyebrow="HOW WE WORK">
         From research to <br className="hidden sm:block" /> pixel perfection!
       </SectionHeading>

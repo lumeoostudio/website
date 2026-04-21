@@ -12,28 +12,28 @@ import { WhyChooseUs } from "./-components/sections/WhyChooseUs";
 export const Route = createFileRoute("/")({ component: App });
 
 function App() {
-	return (
-		<>
-			<Hero />
-			<HowWeWork />
-			<WhatWeOffer />
-			<OurWorks works={works1} />
-			<WhyChooseUs />
-			<Pricing />
-			<Testimonials />
-			<TheStudio />
-			<StartAProject />
-			<OurWorks works={works2} />
-		</>
-	);
+  return (
+    <>
+      <Hero />
+      <HowWeWork />
+      <WhatWeOffer />
+      <OurWorks works={works1} sectionId="work" />
+      <WhyChooseUs />
+      <Pricing />
+      <Testimonials />
+      <TheStudio />
+      <StartAProject />
+      <OurWorks works={works2} />
+    </>
+  );
 }
 
 const works1 = Array.from({ length: 10 }, (_, index) => ({
-	src: `/assets/our-works/works-${index + 1}.webp`,
-	alt: `Our Work ${index + 1}`,
+  src: `/assets/our-works/works-${index + 1}.webp`,
+  alt: `Our Work ${index + 1}`,
 }));
 
 const works2 = Array.from({ length: 10 }, (_, index) => ({
-	src: `/assets/our-works/works-${index + 10 + 1}.webp`,
-	alt: `Our Work ${index + 1}`,
+  src: `/assets/our-works/works-${index + 10 + 1}.webp`,
+  alt: `Our Work ${index + 1}`,
 }));

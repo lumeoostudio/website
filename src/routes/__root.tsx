@@ -3,6 +3,8 @@ import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
+import "lenis/dist/lenis.css";
+import { ReactLenis } from "lenis/react";
 
 import appCss from "../styles.css?url";
 
@@ -48,20 +50,22 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				suppressHydrationWarning
 				className="wrap-anywhere flex min-h-dvh flex-col font-sans antialiased"
 			>
-				<Header />
-				<main className="flex flex-1 flex-col">{children}</main>
-				<Footer />
-				<TanStackDevtools
-					config={{
-						position: "bottom-right",
-					}}
-					plugins={[
-						{
-							name: "Tanstack Router",
-							render: <TanStackRouterDevtoolsPanel />,
-						},
-					]}
-				/>
+				<ReactLenis root>
+					<Header />
+					<main className="flex flex-1 flex-col">{children}</main>
+					<Footer />
+					<TanStackDevtools
+						config={{
+							position: "bottom-right",
+						}}
+						plugins={[
+							{
+								name: "Tanstack Router",
+								render: <TanStackRouterDevtoolsPanel />,
+							},
+						]}
+					/>
+				</ReactLenis>
 				<Scripts />
 			</body>
 		</html>

@@ -199,7 +199,7 @@ export const Header = () => {
 					href="mailto:hello@lumeoo.studio"
 					className={cn(emailButtonClassName, "hidden md:inline-flex")}
 				>
-					Email Us
+					Book a Call
 				</a>
 
 				<button
@@ -259,7 +259,7 @@ export const Header = () => {
 						)}
 						onClick={() => closeMenu()}
 					>
-						Email Us
+						Book a Call
 					</a>
 				</ul>
 			</div>

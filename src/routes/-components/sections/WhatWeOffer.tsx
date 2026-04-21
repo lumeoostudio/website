@@ -83,7 +83,7 @@ export const WhatWeOffer = () => {
 					</ul>
 				</div>
 				<div className="flex flex-col gap-6">
-					<SectionEyebrow>WHAT WE OFFER</SectionEyebrow>
+					<SectionEyebrow>WHAT WE WORK WITH</SectionEyebrow>
 					<ul className="flex flex-wrap items-center gap-3">
 						<li className="size-fit bg-white p-3">
 							<FigmaDuoToneIcon

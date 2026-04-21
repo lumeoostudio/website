@@ -18,6 +18,8 @@ export const WhatWeOffer = () => {
 	const offers = [
 		{
 			title: "Product design",
+			width: 82,
+			height: 80,
 			description:
 				"We design digital products that solve real problems and improves user experience.",
 			image: "/assets/what-we-offer/offer-1.webp",
@@ -26,6 +28,8 @@ export const WhatWeOffer = () => {
 		{
 			title: "Website design ",
 			smallTitle: "(& No code Dev.)",
+			width: 101,
+			height: 66,
 			description:
 				"Designing and building fast, scalable websites that just works without the complexity of code.",
 			image: "/assets/what-we-offer/offer-2.webp",
@@ -33,6 +37,8 @@ export const WhatWeOffer = () => {
 		},
 		{
 			title: "Brand design",
+			width: 99,
+			height: 61,
 			description:
 				"We help craft memorable brand identities that stand out and connect to the right audience.",
 			image: "/assets/what-we-offer/offer-3.webp",
@@ -57,7 +63,9 @@ export const WhatWeOffer = () => {
 								<img
 									src={offer.image}
 									alt={offer.imageAlt}
-									className="h-fit w-fit"
+									width={offer.width}
+									height={offer.height}
+									className="object-fill"
 								/>
 								<div className="flex flex-col gap-4">
 									<p className="font-medium font-tertiary text-2xl text-primary tracking-[-3%]">

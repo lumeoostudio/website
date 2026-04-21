@@ -89,7 +89,7 @@ const team = [
 	},
 	{
 		name: "Adetunji",
-		role: "Developer",
+		role: "Software Engineer",
 		image: "/assets/the-studio/person-1.png",
 		social_url: "https://x.com/itzadetunji1",
 	},

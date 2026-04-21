@@ -18,7 +18,7 @@ export const Hero = () => {
 
 	return (
 		<section className="mx-auto flex w-full flex-col items-center gap-25 py-20">
-			<div className="flex w-full max-w-155 flex-1 flex-col items-center gap-12">
+			<div className="flex w-full max-w-155 flex-1 flex-col items-center gap-12 px-4 sm:px-0">
 				<div className="flex w-full flex-col items-center gap-4.5">
 					<p className="w-full text-center font-medium text-[48px] leading-[1.4] tracking-[-2%]">
 						<span className="text-muted"> Design</span>{" "}
@@ -50,7 +50,7 @@ export const Hero = () => {
 						products look great and perform
 					</p>
 				</div>
-				<div className="flex items-center gap-6">
+				<div className="flex w-full flex-col items-stretch gap-6 sm:flex-row sm:items-center sm:justify-center">
 					<Button className="!max-h-14 box-content rounded-full px-6.25 py-3 text-xl leading-7.5">
 						Book a Call
 					</Button>

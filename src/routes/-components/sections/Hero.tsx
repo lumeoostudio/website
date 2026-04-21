@@ -1,5 +1,4 @@
-import { ChartUpIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { AnimatedChartUpIcon } from "#/components/svg/AnimatedChartUpIcon";
 import { Button } from "#/components/ui/button";
 import { useInfiniteMarquee } from "#/hooks/useInfiniteMarquee";
 
@@ -25,20 +24,20 @@ export const Hero = () => {
 						<span className="text-primary">partner </span>{" "}
 						<span className="text-muted"> for</span>{" "}
 						<span className="relative pl-13 text-primary">
-							<span className="absolute top-1/2 -left-1 grid size-13 -translate-y-1/2 rotate-7 place-content-center rounded-[1rem] bg-primary">
-								<HugeiconsIcon
-									icon={ChartUpIcon}
+							<span className="absolute top-1/2 -left-1 grid size-13 -translate-y-1/2 rotate-7 place-content-center rounded-[1rem] bg-primary duration-200 hover:rotate-0">
+								<AnimatedChartUpIcon
 									className="size-5 text-white"
+									delay={0.5}
 								/>
 							</span>
 							growth
 						</span>
 						<span className="text-muted"> minded</span>{" "}
 						<span className="relative pl-13 text-primary">
-							<span className="absolute top-1/2 -left-1 grid size-13 -translate-y-1/2 -rotate-10 place-content-center rounded-[1rem] bg-primary">
-								<HugeiconsIcon
-									icon={ChartUpIcon}
+							<span className="absolute top-1/2 -left-1 grid size-13 -translate-y-1/2 -rotate-10 place-content-center rounded-[1rem] bg-primary duration-200 hover:rotate-0">
+								<AnimatedChartUpIcon
 									className="size-5 text-white"
+									delay={1}
 								/>
 							</span>
 							startups
@@ -51,11 +50,11 @@ export const Hero = () => {
 					</p>
 				</div>
 				<div className="flex w-full flex-col items-stretch gap-6 sm:flex-row sm:items-center sm:justify-center">
-					<Button className="!max-h-14 box-content rounded-full px-6.25 py-3 text-xl leading-7.5">
+					<Button className="box-content max-h-14! rounded-full px-6.25 py-3 text-xl leading-7.5">
 						Book a Call
 					</Button>
 					<Button
-						className="!max-h-14 box-content rounded-full px-6.25 py-3 text-xl leading-7.5"
+						className="box-content max-h-14! rounded-full px-6.25 py-3 text-xl leading-7.5"
 						variant="tertiary"
 					>
 						See Our Projects

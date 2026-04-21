@@ -186,6 +186,17 @@ const useHeaderMenuAnimation = () => {
 export const Header = () => {
 	const { isOpen, overlayRef, itemRefs, emailRef, closeMenu, toggleMenu } =
 		useHeaderMenuAnimation();
+	const [isStickyActive, setIsStickyActive] = useState(false);
+
+	useEffect(() => {
+		const onScroll = () => {
+			setIsStickyActive(window.scrollY > 0);
+		};
+
+		onScroll();
+		window.addEventListener("scroll", onScroll, { passive: true });
+		return () => window.removeEventListener("scroll", onScroll);
+	}, []);
 
 	return (
 		<>
@@ -201,7 +212,10 @@ export const Header = () => {
 							<li key={label}>
 								<a
 									href={href}
-									className={linkClassName}
+									className={cn(
+										linkClassName,
+										isStickyActive && "text-primary",
+									)}
 								>
 									{label}
 								</a>

@@ -5,9 +5,10 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import gsap from "gsap";
-import type { MouseEvent } from "react";
 import {
+	createContext,
 	useCallback,
+	useContext,
 	useEffect,
 	useLayoutEffect,
 	useRef,
@@ -62,25 +63,42 @@ function applyFrameToImg(
 	img.style.height = `${frame.height}px`;
 }
 
-type ImageGalleryProps = {
+type ImageGalleryContextValue = {
 	images: GalleryImage[];
-	listClassName?: string;
-	itemClassName?: string;
-	thumbnailClassName?: string;
+	openAt: (args: {
+		index: number;
+		originRect: DOMRect;
+		thumbImg: HTMLImageElement;
+	}) => void;
+};
+
+const ImageGalleryContext = createContext<ImageGalleryContextValue | null>(
+	null,
+);
+
+export const useImageGallery = () => {
+	const ctx = useContext(ImageGalleryContext);
+	if (!ctx) {
+		throw new Error("useImageGallery must be used within ImageGalleryProvider");
+	}
+	return ctx;
+};
+
+type ImageGalleryProviderProps = {
+	images: GalleryImage[];
+	children: React.ReactNode;
 	dialogLabel?: string;
 	overlayClassName?: string;
 	modalImageClassName?: string;
 };
 
-export const ImageGallery = ({
+export const ImageGalleryProvider = ({
 	images,
-	listClassName,
-	itemClassName,
-	thumbnailClassName,
+	children,
 	dialogLabel = "Image gallery preview",
 	overlayClassName,
 	modalImageClassName,
-}: ImageGalleryProps) => {
+}: ImageGalleryProviderProps) => {
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
 	const hasActiveImage = activeIndex !== null;
 
@@ -224,6 +242,25 @@ export const ImageGallery = ({
 			? (images[activeIndex]?.src ?? null)
 			: null;
 
+	const openAt = useCallback(
+		({
+			index,
+			originRect,
+			thumbImg,
+		}: {
+			index: number;
+			originRect: DOMRect;
+			thumbImg: HTMLImageElement;
+		}) => {
+			thumbnailRefs.current[index] = thumbImg;
+			openOriginRectRef.current = originRect;
+			setActiveIndex(index);
+		},
+		[],
+	);
+
+	const contextValue: ImageGalleryContextValue = { images, openAt };
+
 	useLayoutEffect(() => {
 		if (activeIndex === null || isClosingRef.current) {
 			return;
@@ -275,19 +312,6 @@ export const ImageGallery = ({
 			img.removeEventListener("load", onLoad);
 		};
 	}, [activeIndex, activeSlideSrc, killOpenAnimation, runOpenAnimation]);
-
-	const handleThumbnailClick = useCallback(
-		(index: number, event: MouseEvent<HTMLButtonElement>) => {
-			const thumbImg = event.currentTarget.querySelector("img");
-			if (!thumbImg) {
-				return;
-			}
-
-			openOriginRectRef.current = thumbImg.getBoundingClientRect();
-			setActiveIndex(index);
-		},
-		[],
-	);
 
 	const closeGallery = useCallback(() => {
 		if (activeIndexRef.current === null || isClosingRef.current) {
@@ -436,13 +460,18 @@ export const ImageGallery = ({
 	}, [killOpenAnimation]);
 
 	if (images.length === 0) {
-		return null;
+		return (
+			<ImageGalleryContext.Provider value={contextValue}>
+				{children}
+			</ImageGalleryContext.Provider>
+		);
 	}
 
-	const currentImage = hasActiveImage ? images[activeIndex] : null;
+	const currentImage =
+		hasActiveImage && activeIndex !== null ? images[activeIndex] : null;
 
 	const galleryModal =
-		hasActiveImage && currentImage ? (
+		hasActiveImage && currentImage && activeIndex !== null ? (
 			<div
 				role="dialog"
 				aria-modal="true"
@@ -479,7 +508,7 @@ export const ImageGallery = ({
 						<Button
 							type="button"
 							className="size-10 rounded-full bg-primary text-2xl text-white transition hover:bg-primary/90"
-							aria-label="Show previous image"
+							aria-label="Close gallery"
 							onClick={(event) => {
 								event.stopPropagation();
 								closeGallery();
@@ -529,38 +558,116 @@ export const ImageGallery = ({
 		) : null;
 
 	return (
-		<>
-			<ul
-				className={cn(
-					"grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-12",
-					listClassName,
-				)}
-			>
-				{images.map((image, index) => (
+		<ImageGalleryContext.Provider value={contextValue}>
+			{children}
+			{galleryModal}
+		</ImageGalleryContext.Provider>
+	);
+};
+
+type ImageGalleryThumbnailsProps = {
+	/** Images shown in this grid, in order */
+	images: GalleryImage[];
+	/** Global index in `ImageGalleryProvider` for `images[0]` */
+	startIndex: number;
+	listClassName?: string;
+	itemClassName?: string;
+	thumbnailClassName?: string;
+};
+
+export const ImageGalleryThumbnails = ({
+	images,
+	startIndex,
+	listClassName,
+	itemClassName,
+	thumbnailClassName,
+}: ImageGalleryThumbnailsProps) => {
+	const { openAt } = useImageGallery();
+
+	if (images.length === 0) {
+		return null;
+	}
+
+	return (
+		<ul
+			className={cn(
+				"grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-12",
+				listClassName,
+			)}
+		>
+			{images.map((image, i) => {
+				const globalIndex = startIndex + i;
+				return (
 					<li
-						key={`${image.src}-${index}`}
+						key={`${image.src}-${globalIndex}`}
 						className={cn("col-span-6 cursor-pointer", itemClassName)}
 					>
 						<button
 							type="button"
 							className="block h-full w-full cursor-pointer"
-							onClick={(event) => handleThumbnailClick(index, event)}
-							aria-label={`Open image ${index + 1} in gallery`}
+							onClick={(event) => {
+								const thumbImg = event.currentTarget.querySelector("img");
+								if (!thumbImg) {
+									return;
+								}
+								openAt({
+									index: globalIndex,
+									originRect: thumbImg.getBoundingClientRect(),
+									thumbImg,
+								});
+							}}
+							aria-label={`Open image ${globalIndex + 1} in gallery`}
 						>
 							<img
-								ref={(element) => {
-									thumbnailRefs.current[index] = element;
-								}}
 								src={image.src}
 								alt={image.alt}
 								className={cn("h-full w-full object-cover", thumbnailClassName)}
 							/>
 						</button>
 					</li>
-				))}
-			</ul>
+				);
+			})}
+		</ul>
+	);
+};
 
-			{galleryModal}
-		</>
+type ImageGalleryProps = {
+	images: GalleryImage[];
+	listClassName?: string;
+	itemClassName?: string;
+	thumbnailClassName?: string;
+	dialogLabel?: string;
+	overlayClassName?: string;
+	modalImageClassName?: string;
+};
+
+/** Standalone gallery (own provider). Prefer `ImageGalleryProvider` + `ImageGalleryThumbnails` for a shared lightbox. */
+export const ImageGallery = ({
+	images,
+	listClassName,
+	itemClassName,
+	thumbnailClassName,
+	dialogLabel,
+	overlayClassName,
+	modalImageClassName,
+}: ImageGalleryProps) => {
+	if (images.length === 0) {
+		return null;
+	}
+	return (
+		<ImageGalleryProvider
+			images={images}
+			dialogLabel={dialogLabel}
+			overlayClassName={overlayClassName}
+			modalImageClassName={modalImageClassName}
+		>
+			<ImageGalleryThumbnails
+				images={images}
+				startIndex={0}
+				listClassName={listClassName}
+				itemClassName={itemClassName}
+				thumbnailClassName={thumbnailClassName}
+			/>
+		</ImageGalleryProvider>
 	);
 };

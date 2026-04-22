@@ -1,17 +1,14 @@
+import { useImageGallery } from "#/components/ImageGallery";
 import { AnimatedChartUpIcon } from "#/components/svg/AnimatedChartUpIcon";
 import { Button } from "#/components/ui/button";
+import { HERO_GALLERY_IMAGES } from "#/data/siteGallery";
 import { useInfiniteMarquee } from "#/hooks/useInfiniteMarquee";
 
-const HERO_IMAGES = [
-	{ src: "/assets/hero/hero-1.webp", alt: "Hero Carousel 1" },
-	{ src: "/assets/hero/hero-2.webp", alt: "Hero Carousel 2" },
-	{ src: "/assets/hero/hero-3.webp", alt: "Hero Carousel 3" },
-	{ src: "/assets/hero/hero-4.webp", alt: "Hero Carousel 4" },
-] as const;
-
-const HERO_MARQUEE_LOOP = [...HERO_IMAGES, ...HERO_IMAGES] as const;
+const HERO_MARQUEE_LOOP = [...HERO_GALLERY_IMAGES, ...HERO_GALLERY_IMAGES] as const;
+const HERO_IMAGE_COUNT = HERO_GALLERY_IMAGES.length;
 
 export const Hero = () => {
+	const { openAt } = useImageGallery();
 	const { trackRef, onPointerEnter, onPointerLeave } =
 		useInfiniteMarquee<HTMLUListElement>();
 
@@ -71,19 +68,39 @@ export const Hero = () => {
 					className="absolute flex h-full w-max list-none items-center gap-8"
 					aria-label="Hero showcase carousel"
 				>
-					{HERO_MARQUEE_LOOP.map((image, index) => (
-						<li
-							key={`${image.src}-${index}`}
-							className="h-full shrink-0"
-						>
-							<img
-								src={image.src}
-								alt={image.alt}
-								className="h-full w-auto object-cover"
-								draggable={false}
-							/>
-						</li>
-					))}
+					{HERO_MARQUEE_LOOP.map((image, index) => {
+						const globalIndex = index % HERO_IMAGE_COUNT;
+						return (
+							<li
+								key={`${image.src}-${index}`}
+								className="h-full shrink-0"
+							>
+								<button
+									type="button"
+									className="block h-full cursor-pointer p-0"
+									aria-label={`Open hero image ${globalIndex + 1} in gallery`}
+									onClick={(event) => {
+										const img = event.currentTarget.querySelector("img");
+										if (!img) {
+											return;
+										}
+										openAt({
+											index: globalIndex,
+											originRect: img.getBoundingClientRect(),
+											thumbImg: img,
+										});
+									}}
+								>
+									<img
+										src={image.src}
+										alt={image.alt}
+										className="h-full w-auto object-cover"
+										draggable={false}
+									/>
+								</button>
+							</li>
+						);
+					})}
 				</ul>
 			</div>
 		</section>

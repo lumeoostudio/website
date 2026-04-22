@@ -248,3 +248,20 @@ body {
     scrollbar-width: none;
   }
 }
+
+/* useStackedImageHover: one constant transition (inherited) — no per-event retargeting */
+@layer components {
+	.stacked-nudge {
+		transform: translate3d(0, 0, 0);
+		transition: transform
+			var(--stack-nudge-duration, 0.5s)
+			var(--stack-nudge-ease, cubic-bezier(0.4, 0, 0.2, 1));
+	}
+	.stacked-nudge.stacked-nudge--active {
+		transform: translate3d(
+			calc(-1 * var(--stack-nudge-l, 0px)),
+			calc(-1 * var(--stack-nudge-u, 0px)),
+			0
+		);
+	}
+}

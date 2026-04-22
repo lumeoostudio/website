@@ -200,7 +200,7 @@ export const Header = () => {
 
 	return (
 		<>
-			<nav className="sticky top-0 z-60 backdrop-blur-[5px]">
+			<nav className="sticky top-0 z-10 backdrop-blur-[5px]">
 				<div className="mx-auto flex w-full max-w-225 items-center justify-between px-6 py-4 sm:max-h-25 sm:min-h-25 sm:py-7">
 					<img
 						src="/assets/brand/logo-large.svg"

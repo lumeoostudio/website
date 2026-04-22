@@ -55,18 +55,21 @@ export const WhatWeOffer = () => {
 						<br /> Yes we do it!
 					</SectionHeading>
 					<ul className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-						{offers.map((offer) => (
+						{offers.map((offer, index) => (
 							<li
 								key={offer.title}
 								className="flex flex-col gap-16 bg-white p-6"
 							>
-								<img
+								{/* <img
 									src={offer.image}
 									alt={offer.imageAlt}
 									width={offer.width}
 									height={offer.height}
 									className="object-fill"
-								/>
+								/> */}
+								{index === 0 && <WhatWeOfferImage1 />}
+								{index === 1 && <WhatWeOfferImage2 />}
+								{index === 2 && <WhatWeOfferImage3 />}
 								<div className="flex flex-col gap-4">
 									<p className="font-medium font-tertiary text-2xl text-primary tracking-[-3%]">
 										{offer.title}{" "}
@@ -128,5 +131,61 @@ export const WhatWeOffer = () => {
 				</div>
 			</div>
 		</section>
+	);
+};
+
+const WhatWeOfferImage1 = () => {
+	return (
+		<figure className="relative h-20">
+			<img
+				src="public/assets/what-we-offer/offer-1/part-3.webp"
+				alt="Product design offering"
+				className="filter-[drop-shadow(12.3019px_30.7548px_13.5321px_rgba(0,0,0,0.01))_drop-shadow(7.38115px_17.2227px_11.0717px_rgba(0,0,0,0.03))_drop-shadow(2.46038px_7.38115px_8.61134px_rgba(0,0,0,0.05))_drop-shadow(1.23019px_2.46038px_4.92077px_rgba(0,0,0,0.06))] absolute top-0 left-11.25 h-18.25 w-8.5 rotate-[2.65deg]"
+			/>
+			<img
+				src="public/assets/what-we-offer/offer-1/part-2.webp"
+				alt="Product design offering"
+				className="filter-[drop-shadow(12.3019px_30.7548px_13.5321px_rgba(0,0,0,0.01))_drop-shadow(7.38115px_17.2227px_11.0717px_rgba(0,0,0,0.03))_drop-shadow(2.46038px_7.38115px_8.61134px_rgba(0,0,0,0.05))_drop-shadow(1.23019px_2.46038px_4.92077px_rgba(0,0,0,0.06))] absolute top-1 left-6.25 h-18.25 w-8.5 rotate-[8deg]"
+			/>
+			<img
+				src="public/assets/what-we-offer/offer-1/part-1.webp"
+				alt="Product design offering"
+				className="filter-[drop-shadow(12.3019px_30.7548px_13.5321px_rgba(0,0,0,0.01))_drop-shadow(7.38115px_17.2227px_11.0717px_rgba(0,0,0,0.03))_drop-shadow(2.46038px_7.38115px_8.61134px_rgba(0,0,0,0.05))_drop-shadow(1.23019px_2.46038px_4.92077px_rgba(0,0,0,0.06))] absolute top-0.5 h-18.25 w-8.5 -rotate-2"
+			/>
+		</figure>
+	);
+};
+
+const WhatWeOfferImage2 = () => {
+	return (
+		<figure className="relative h-16">
+			<img
+				src="public/assets/what-we-offer/offer-2/part-2.webp"
+				alt="Product design offering"
+				className="filter-[drop-shadow(12.3019px_30.7548px_13.5321px_rgba(0,0,0,0.01))_drop-shadow(7.38115px_17.2227px_11.0717px_rgba(0,0,0,0.03))_drop-shadow(2.46038px_7.38115px_8.61134px_rgba(0,0,0,0.05))_drop-shadow(1.23019px_2.46038px_4.92077px_rgba(0,0,0,0.06))] absolute top-2 left-2 h-14 w-22.75 -rotate-2"
+			/>
+			<img
+				src="public/assets/what-we-offer/offer-2/part-1.webp"
+				alt="Product design offering"
+				className="filter-[drop-shadow(12.3019px_30.7548px_13.5321px_rgba(0,0,0,0.01))_drop-shadow(7.38115px_17.2227px_11.0717px_rgba(0,0,0,0.03))_drop-shadow(2.46038px_7.38115px_8.61134px_rgba(0,0,0,0.05))_drop-shadow(1.23019px_2.46038px_4.92077px_rgba(0,0,0,0.06))] absolute top-0 left-0 h-14 w-22.75"
+			/>
+		</figure>
+	);
+};
+
+const WhatWeOfferImage3 = () => {
+	return (
+		<figure className="relative h-15.25">
+			<img
+				src="public/assets/what-we-offer/offer-3/part-2.webp"
+				alt="Product design offering"
+				className="filter-[drop-shadow(12.3019px_30.7548px_13.5321px_rgba(0,0,0,0.01))_drop-shadow(7.38115px_17.2227px_11.0717px_rgba(0,0,0,0.03))_drop-shadow(2.46038px_7.38115px_8.61134px_rgba(0,0,0,0.05))_drop-shadow(1.23019px_2.46038px_4.92077px_rgba(0,0,0,0.06))] absolute top-2 left-2 h-13.5 w-22.75"
+			/>
+			<img
+				src="public/assets/what-we-offer/offer-3/part-1.webp"
+				alt="Product design offering"
+				className="filter-[drop-shadow(12.3019px_30.7548px_13.5321px_rgba(0,0,0,0.01))_drop-shadow(7.38115px_17.2227px_11.0717px_rgba(0,0,0,0.03))_drop-shadow(2.46038px_7.38115px_8.61134px_rgba(0,0,0,0.05))_drop-shadow(1.23019px_2.46038px_4.92077px_rgba(0,0,0,0.06))] absolute top-0 left-0 size-13.5"
+			/>
+		</figure>
 	);
 };

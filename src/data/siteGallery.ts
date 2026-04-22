@@ -1,11 +1,14 @@
 import type { GalleryImage } from "#/components/ImageGallery";
 
-export const HERO_GALLERY_IMAGES: GalleryImage[] = [
-	{ src: "/assets/hero/hero-1.webp", alt: "Hero Carousel 1" },
-	{ src: "/assets/hero/hero-2.webp", alt: "Hero Carousel 2" },
-	{ src: "/assets/hero/hero-3.webp", alt: "Hero Carousel 3" },
-	{ src: "/assets/hero/hero-4.webp", alt: "Hero Carousel 4" },
-];
+const HERO_IMAGE_COUNT = 4;
+
+export const HERO_GALLERY_IMAGES: GalleryImage[] = Array.from(
+	{ length: HERO_IMAGE_COUNT },
+	(_, index) => ({
+		src: `/assets/hero/hero-${index + 1}.webp`,
+		alt: `Hero Carousel ${index + 1}`,
+	}),
+);
 
 export const WORKS_GALLERY_IMAGES: GalleryImage[] = Array.from(
 	{ length: 20 },

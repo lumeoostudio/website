@@ -4,7 +4,10 @@ import { Button } from "#/components/ui/button";
 import { HERO_GALLERY_IMAGES } from "#/data/siteGallery";
 import { useInfiniteMarquee } from "#/hooks/useInfiniteMarquee";
 
-const HERO_MARQUEE_LOOP = [...HERO_GALLERY_IMAGES, ...HERO_GALLERY_IMAGES] as const;
+const HERO_MARQUEE_LOOP = [
+	...HERO_GALLERY_IMAGES,
+	...HERO_GALLERY_IMAGES,
+] as const;
 const HERO_IMAGE_COUNT = HERO_GALLERY_IMAGES.length;
 
 export const Hero = () => {
@@ -13,7 +16,10 @@ export const Hero = () => {
 		useInfiniteMarquee<HTMLUListElement>();
 
 	return (
-		<section className="mx-auto flex w-full flex-col items-center gap-25 py-20">
+		<section
+			className="mx-auto flex w-full flex-col items-center gap-25 py-20"
+			id="hero"
+		>
 			<div className="flex w-full max-w-155 flex-1 flex-col items-center gap-12 px-4 sm:px-0">
 				<div className="flex w-full flex-col items-center gap-4.5">
 					<p className="w-full text-center font-medium text-[48px] leading-[1.4] tracking-[-2%]">
@@ -53,8 +59,9 @@ export const Hero = () => {
 					<Button
 						className="box-content max-h-14! rounded-full px-6.25 py-3 text-xl leading-7.5"
 						variant="tertiary"
+						asChild
 					>
-						See Our Projects
+						<a href="#work">See Our Projects</a>
 					</Button>
 				</div>
 			</div>

@@ -8,6 +8,7 @@ import {
 	useRef,
 	useState,
 } from "react";
+
 import { cn } from "#/lib/utils";
 
 const NAV_LINKS = [
@@ -202,11 +203,13 @@ export const Header = () => {
 		<>
 			<nav className="sticky top-0 z-10 backdrop-blur-[5px]">
 				<div className="mx-auto flex w-full max-w-225 items-center justify-between px-6 py-4 sm:max-h-25 sm:min-h-25 sm:py-7">
-					<img
-						src="/assets/brand/logo-large.svg"
-						alt="Logo"
-						className="h-6.5 max-w-33.25 flex-1 sm:h-8"
-					/>
+					<a href="#hero">
+						<img
+							src="/assets/brand/logo-large.svg"
+							alt="Logo"
+							className="h-6.5 max-w-33.25 flex-1 sm:h-8"
+						/>
+					</a>
 					<ul className="hidden items-center gap-8 md:flex">
 						{NAV_LINKS.map(({ href, label }) => (
 							<li key={label}>

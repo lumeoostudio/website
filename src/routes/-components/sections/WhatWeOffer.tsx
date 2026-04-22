@@ -131,7 +131,7 @@ export const WhatWeOffer = () => {
 };
 
 /** One `drop-shadow` on the static wrapper; heavy multi-layer filter on the moving `img` was most of the section cost. */
-const offerImageShadow = "filter-[drop-shadow(0_4px_14px_rgba(0,0,0,0.1))]";
+const offerImageShadow = "drop-shadow-[4px_10px_15px_rgba(0,0,0,0.08)]";
 
 // drop-shadow(12.3019px_30.7548px_13.5321px_rgba(0,0,0,0.01))_drop-shadow(7.38115px_17.2227px_11.0717px_rgba(0,0,0,0.03))_drop-shadow(2.46038px_7.38115px_8.61134px_rgba(0,0,0,0.05))_drop-shadow(1.23019px_2.46038px_4.92077px_rgba(0,0,0,0.06))
 

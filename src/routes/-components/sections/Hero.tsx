@@ -11,9 +11,9 @@ const HERO_MARQUEE_LOOP = [
 const HERO_IMAGE_COUNT = HERO_GALLERY_IMAGES.length;
 
 export const Hero = () => {
-	const { openAt } = useImageGallery();
+	const { openAt, isOpen: isGalleryOpen } = useImageGallery();
 	const { trackRef, onPointerEnter, onPointerLeave } =
-		useInfiniteMarquee<HTMLUListElement>();
+		useInfiniteMarquee<HTMLUListElement>({ paused: isGalleryOpen });
 
 	return (
 		<section

@@ -26,33 +26,6 @@ export type GalleryImage = {
 const VIEW_PADDING_X = 16;
 const VIEW_PADDING_Y = 32;
 
-function getContainFrame(
-	naturalWidth: number,
-	naturalHeight: number,
-	paddingX: number,
-	paddingY: number,
-) {
-	const viewWidth = window.innerWidth - paddingX * 2;
-	const viewHeight = window.innerHeight - paddingY * 2;
-
-	if (!naturalWidth || !naturalHeight) {
-		return {
-			left: paddingX,
-			top: paddingY,
-			width: viewWidth,
-			height: viewHeight,
-		};
-	}
-
-	const scale = Math.min(viewWidth / naturalWidth, viewHeight / naturalHeight);
-	const width = naturalWidth * scale;
-	const height = naturalHeight * scale;
-	const left = (window.innerWidth - width) / 2;
-	const top = (window.innerHeight - height) / 2;
-
-	return { left, top, width, height };
-}
-
 function applyFrameToImg(
 	img: HTMLImageElement,
 	frame: { left: number; top: number; width: number; height: number },
@@ -63,8 +36,21 @@ function applyFrameToImg(
 	img.style.height = `${frame.height}px`;
 }
 
+/** Clears fixed-position FLIP styles so the image sizes from CSS (responsive) again. */
+function settleImageInFlow(img: HTMLImageElement) {
+	img.style.removeProperty("left");
+	img.style.removeProperty("top");
+	img.style.removeProperty("width");
+	img.style.removeProperty("height");
+	img.style.removeProperty("position");
+	img.style.removeProperty("visibility");
+	gsap.set(img, { clearProps: "transform,borderRadius" });
+}
+
 type ImageGalleryContextValue = {
 	images: GalleryImage[];
+	/** True while the lightbox is open (any image). */
+	isOpen: boolean;
 	openAt: (args: {
 		index: number;
 		originRect: DOMRect;
@@ -102,8 +88,11 @@ export const ImageGalleryProvider = ({
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
 	const hasActiveImage = activeIndex !== null;
 
-	const thumbnailRefs = useRef<(HTMLImageElement | null)[]>([]);
+	/** Grid thumbnail that opened the lightbox — used for open/close FLIP, never the filmstrip. */
+	const openSourceThumbRef = useRef<HTMLImageElement | null>(null);
+	const filmstripItemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 	const flyingImgRef = useRef<HTMLImageElement | null>(null);
+	const stageRef = useRef<HTMLDivElement | null>(null);
 	const backdropRef = useRef<HTMLDivElement | null>(null);
 	const controlsRef = useRef<HTMLDivElement | null>(null);
 
@@ -120,7 +109,7 @@ export const ImageGalleryProvider = ({
 	}, []);
 
 	const runOpenAnimation = useCallback(
-		(thumbRect: DOMRect, thumbIndex: number) => {
+		(thumbRect: DOMRect) => {
 			const img = flyingImgRef.current;
 			const backdrop = backdropRef.current;
 			const controls = controlsRef.current;
@@ -130,24 +119,36 @@ export const ImageGalleryProvider = ({
 
 			killOpenAnimation();
 
-			const thumbEl = thumbnailRefs.current[thumbIndex];
-			const thumbRadius = thumbEl
-				? Number.parseFloat(getComputedStyle(thumbEl).borderRadius) || 0
+			const sourceThumb = openSourceThumbRef.current;
+			const thumbRadius = sourceThumb
+				? Number.parseFloat(getComputedStyle(sourceThumb).borderRadius) || 0
 				: 0;
 
 			const applyFrame = () => {
-				const { naturalWidth, naturalHeight } = img;
-				const frame = getContainFrame(
-					naturalWidth,
-					naturalHeight,
-					VIEW_PADDING_X,
-					VIEW_PADDING_Y,
-				);
+				if (!img.naturalWidth) {
+					return;
+				}
 
-				applyFrameToImg(img, frame);
+				// Measure the laid-out “rest” size from CSS (viewport-sized stage, no window listeners).
+				img.style.visibility = "hidden";
+				void img.offsetWidth;
+				const endRect = img.getBoundingClientRect();
+				img.style.visibility = "";
 
-				const finalCx = frame.left + frame.width / 2;
-				const finalCy = frame.top + frame.height / 2;
+				if (endRect.width < 2 || endRect.height < 2) {
+					return;
+				}
+
+				img.style.position = "fixed";
+				applyFrameToImg(img, {
+					left: endRect.left,
+					top: endRect.top,
+					width: endRect.width,
+					height: endRect.height,
+				});
+
+				const finalCx = endRect.left + endRect.width / 2;
+				const finalCy = endRect.top + endRect.height / 2;
 				const thumbCx = thumbRect.left + thumbRect.width / 2;
 				const thumbCy = thumbRect.top + thumbRect.height / 2;
 
@@ -155,8 +156,8 @@ export const ImageGalleryProvider = ({
 				gsap.set(img, {
 					x: thumbCx - finalCx,
 					y: thumbCy - finalCy,
-					scaleX: thumbRect.width / frame.width,
-					scaleY: thumbRect.height / frame.height,
+					scaleX: thumbRect.width / endRect.width,
+					scaleY: thumbRect.height / endRect.height,
 					borderRadius: thumbRadius,
 					force3D: true,
 				});
@@ -165,7 +166,11 @@ export const ImageGalleryProvider = ({
 					gsap.set(controls, { opacity: 0, pointerEvents: "none" });
 				}
 
-				const timeline = gsap.timeline();
+				const timeline = gsap.timeline({
+					onComplete: () => {
+						settleImageInFlow(img);
+					},
+				});
 				openTimelineRef.current = timeline;
 
 				timeline.to(
@@ -252,14 +257,18 @@ export const ImageGalleryProvider = ({
 			originRect: DOMRect;
 			thumbImg: HTMLImageElement;
 		}) => {
-			thumbnailRefs.current[index] = thumbImg;
+			openSourceThumbRef.current = thumbImg;
 			openOriginRectRef.current = originRect;
 			setActiveIndex(index);
 		},
 		[],
 	);
 
-	const contextValue: ImageGalleryContextValue = { images, openAt };
+	const contextValue: ImageGalleryContextValue = {
+		images,
+		isOpen: hasActiveImage,
+		openAt,
+	};
 
 	useLayoutEffect(() => {
 		if (activeIndex === null || isClosingRef.current) {
@@ -269,7 +278,7 @@ export const ImageGalleryProvider = ({
 		const origin = openOriginRectRef.current;
 		if (origin) {
 			openOriginRectRef.current = null;
-			runOpenAnimation(origin, activeIndex);
+			runOpenAnimation(origin);
 			return;
 		}
 
@@ -280,21 +289,7 @@ export const ImageGalleryProvider = ({
 
 		const syncExpandedLayout = () => {
 			killOpenAnimation();
-			const frame = getContainFrame(
-				img.naturalWidth,
-				img.naturalHeight,
-				VIEW_PADDING_X,
-				VIEW_PADDING_Y,
-			);
-			applyFrameToImg(img, frame);
-			gsap.set(img, {
-				x: 0,
-				y: 0,
-				scaleX: 1,
-				scaleY: 1,
-				borderRadius: 24,
-				force3D: true,
-			});
+			settleImageInFlow(img);
 		};
 
 		if (img.complete && img.naturalWidth > 0) {
@@ -311,7 +306,13 @@ export const ImageGalleryProvider = ({
 		return () => {
 			img.removeEventListener("load", onLoad);
 		};
-	}, [activeIndex, activeSlideSrc, killOpenAnimation, runOpenAnimation]);
+	}, [
+		activeIndex,
+		activeSlideSrc,
+		images.length,
+		killOpenAnimation,
+		runOpenAnimation,
+	]);
 
 	const closeGallery = useCallback(() => {
 		if (activeIndexRef.current === null || isClosingRef.current) {
@@ -321,14 +322,14 @@ export const ImageGalleryProvider = ({
 		isClosingRef.current = true;
 		killOpenAnimation();
 
-		const index = activeIndexRef.current;
 		const img = flyingImgRef.current;
 		const backdrop = backdropRef.current;
 		const controls = controlsRef.current;
-		const thumbEl = thumbnailRefs.current[index];
+		const sourceThumb = openSourceThumbRef.current;
 
 		const finishClose = () => {
 			isClosingRef.current = false;
+			openSourceThumbRef.current = null;
 			setActiveIndex(null);
 		};
 
@@ -345,8 +346,8 @@ export const ImageGalleryProvider = ({
 			gsap.killTweensOf(controls);
 		}
 
-		const rect = thumbEl?.getBoundingClientRect();
-		if (!rect || rect.width === 0 || rect.height === 0) {
+		const destRect = sourceThumb?.getBoundingClientRect();
+		if (!destRect || destRect.width === 0 || destRect.height === 0) {
 			gsap.to(backdrop, {
 				opacity: 0,
 				duration: 0.2,
@@ -355,24 +356,24 @@ export const ImageGalleryProvider = ({
 			return;
 		}
 
-		const { naturalWidth, naturalHeight } = img;
-		const frame = getContainFrame(
-			naturalWidth,
-			naturalHeight,
-			VIEW_PADDING_X,
-			VIEW_PADDING_Y,
-		);
+		const fromRect = img.getBoundingClientRect();
 
-		const finalCx = frame.left + frame.width / 2;
-		const finalCy = frame.top + frame.height / 2;
-		const thumbCx = rect.left + rect.width / 2;
-		const thumbCy = rect.top + rect.height / 2;
+		img.style.position = "fixed";
+		applyFrameToImg(img, {
+			left: fromRect.left,
+			top: fromRect.top,
+			width: fromRect.width,
+			height: fromRect.height,
+		});
 
-		const thumbRadius = thumbEl
-			? Number.parseFloat(getComputedStyle(thumbEl).borderRadius) || 0
+		const finalCx = fromRect.left + fromRect.width / 2;
+		const finalCy = fromRect.top + fromRect.height / 2;
+		const thumbCx = destRect.left + destRect.width / 2;
+		const thumbCy = destRect.top + destRect.height / 2;
+
+		const thumbRadius = sourceThumb
+			? Number.parseFloat(getComputedStyle(sourceThumb).borderRadius) || 0
 			: 0;
-
-		applyFrameToImg(img, frame);
 
 		gsap.set(img, {
 			x: 0,
@@ -405,8 +406,8 @@ export const ImageGalleryProvider = ({
 			{
 				x: thumbCx - finalCx,
 				y: thumbCy - finalCy,
-				scaleX: rect.width / frame.width,
-				scaleY: rect.height / frame.height,
+				scaleX: destRect.width / fromRect.width,
+				scaleY: destRect.height / fromRect.height,
 				borderRadius: thumbRadius,
 				duration: 0.48,
 				ease: "power2.in",
@@ -414,6 +415,21 @@ export const ImageGalleryProvider = ({
 			0,
 		);
 	}, [killOpenAnimation]);
+
+	useEffect(() => {
+		if (activeIndex === null || !hasActiveImage) {
+			return;
+		}
+		if (images.length <= 1) {
+			return;
+		}
+		const el = filmstripItemRefs.current[activeIndex];
+		el?.scrollIntoView({
+			inline: "center",
+			block: "nearest",
+			behavior: "smooth",
+		});
+	}, [activeIndex, hasActiveImage, images.length]);
 
 	useEffect(() => {
 		if (!hasActiveImage) {
@@ -446,8 +462,6 @@ export const ImageGalleryProvider = ({
 			return;
 		}
 
-		document.body.style.overflow = "hidden";
-
 		return () => {
 			document.body.style.removeProperty("overflow");
 		};
@@ -461,7 +475,9 @@ export const ImageGalleryProvider = ({
 
 	if (images.length === 0) {
 		return (
-			<ImageGalleryContext.Provider value={contextValue}>
+			<ImageGalleryContext.Provider
+				value={{ images, isOpen: false, openAt }}
+			>
 				{children}
 			</ImageGalleryContext.Provider>
 		);
@@ -485,19 +501,30 @@ export const ImageGalleryProvider = ({
 					onClick={closeGallery}
 				/>
 
-				<img
-					ref={flyingImgRef}
-					src={currentImage.src}
-					alt={currentImage.alt}
-					className={cn(
-						"pointer-events-none fixed z-10 max-h-none max-w-none object-contain will-change-transform",
-						modalImageClassName,
-					)}
-					onClick={(event) => event.stopPropagation()}
-				/>
+				<div
+					ref={stageRef}
+					className="pointer-events-none fixed z-10 flex min-h-0 items-center justify-center"
+					style={{
+						top: VIEW_PADDING_Y,
+						left: VIEW_PADDING_X,
+						right: VIEW_PADDING_X,
+						bottom: VIEW_PADDING_Y,
+					}}
+				>
+					<img
+						ref={flyingImgRef}
+						src={currentImage.src}
+						alt={currentImage.alt}
+						className={cn(
+							"pointer-events-none h-auto max-h-full w-auto min-w-0 max-w-full rounded-3xl object-contain will-change-transform",
+							modalImageClassName,
+						)}
+						onClick={(event) => event.stopPropagation()}
+					/>
+				</div>
 				<div
 					ref={controlsRef}
-					className="pointer-events-none fixed z-20 flex h-screen w-screen flex-col items-stretch justify-between gap-4 px-5 pt-5 opacity-0"
+					className="pointer-events-none fixed inset-0 z-20 flex flex-col items-stretch justify-between gap-4 px-5 pt-5 opacity-0"
 					onClick={closeGallery}
 					aria-hidden="true"
 				>
@@ -553,6 +580,53 @@ export const ImageGalleryProvider = ({
 							/>
 						</Button>
 					</ul>
+					{images.length > 1 && (
+						<div
+							role="group"
+							className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 w-full border-white/10 border-t bg-black/25 pt-2 pb-2 backdrop-blur-sm"
+							onClick={(e) => e.stopPropagation()}
+						>
+							<div className="w-full overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+								<ul
+									aria-label="Gallery thumbnails"
+									className="mx-auto flex w-max min-w-full items-center justify-center gap-2 px-1"
+								>
+									{images.map((image, i) => (
+										<li
+											key={`${image.src}-${i}`}
+											className="shrink-0"
+										>
+											<button
+												type="button"
+												ref={(el) => {
+													filmstripItemRefs.current[i] = el;
+												}}
+												onClick={(event) => {
+													event.stopPropagation();
+													setActiveIndex(i);
+												}}
+												className={cn(
+													"relative block overflow-hidden rounded-md ring-2 transition focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/60",
+													i === activeIndex
+														? "ring-white"
+														: "opacity-55 ring-white/0 hover:opacity-100",
+												)}
+												aria-label={`View image ${i + 1} of ${images.length}`}
+												aria-current={i === activeIndex ? "true" : undefined}
+											>
+												<img
+													src={image.src}
+													alt=""
+													aria-hidden
+													className="h-12 w-16 object-cover sm:h-14 sm:w-18"
+												/>
+											</button>
+										</li>
+									))}
+								</ul>
+							</div>
+						</div>
+					)}
 				</div>
 			</div>
 		) : null;

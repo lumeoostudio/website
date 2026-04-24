@@ -44,7 +44,6 @@ function TestimonialVideo({
 				src={src}
 				loop
 				autoPlay
-				muted
 				playsInline
 				controls={false}
 				onPlay={() => {

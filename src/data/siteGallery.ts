@@ -1,5 +1,6 @@
 import type { GalleryImage } from "#/components/ImageGallery";
 
+/** Each `src` should have a matching `*-large.webp` for the lightbox (see `galleryModalImageSrc`). */
 const HERO_IMAGE_COUNT = 4;
 
 export const HERO_GALLERY_IMAGES: GalleryImage[] = Array.from(

@@ -19,9 +19,22 @@ import { cn } from "#/lib/utils";
 import { Button } from "./ui/button";
 
 export type GalleryImage = {
+	/** Standard URL for grids, hero, and the filmstrip. */
 	src: string;
 	alt: string;
 };
+
+/**
+ * Resolves the high-res lightbox URL: inserts `-large` before the file extension
+ * (e.g. `/a/hero-1.webp` → `/a/hero-1-large.webp`).
+ */
+export function galleryModalImageSrc(src: string): string {
+	const lastDot = src.lastIndexOf(".");
+	if (lastDot <= 0) {
+		return `${src}-large`;
+	}
+	return `${src.slice(0, lastDot)}-large${src.slice(lastDot)}`;
+}
 
 const VIEW_PADDING_X = 16;
 const VIEW_PADDING_Y = 32;
@@ -513,7 +526,7 @@ export const ImageGalleryProvider = ({
 				>
 					<img
 						ref={flyingImgRef}
-						src={currentImage.src}
+						src={galleryModalImageSrc(currentImage.src)}
 						alt={currentImage.alt}
 						className={cn(
 							"pointer-events-none h-auto max-h-full w-auto min-w-0 max-w-full rounded-3xl object-contain will-change-transform",

@@ -1,36 +1,66 @@
 import { PauseIcon, PlayIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useInfiniteMarquee } from "#/hooks/useInfiniteMarquee";
 import { SectionHeading } from "#/routes/-components/section-heading";
 
-function TestimonialVideo({ src }: { src: string }) {
+function TestimonialVideo({
+	src,
+	videoId,
+	activeVideoId,
+	onRequestPlay,
+}: {
+	src: string;
+	videoId: string;
+	activeVideoId: string | null;
+	onRequestPlay: (videoId: string) => void;
+}) {
 	const videoRef = useRef<HTMLVideoElement>(null);
-	const [isPlaying, setIsPlaying] = useState(true);
+	const [isPlaying, setIsPlaying] = useState(false);
+
+	useEffect(() => {
+		const el = videoRef.current;
+		if (!el) return;
+		if (activeVideoId !== videoId && !el.paused) {
+			el.pause();
+		}
+	}, [activeVideoId, videoId]);
 
 	const togglePlayback = useCallback(() => {
 		const el = videoRef.current;
 		if (!el) return;
 		if (el.paused) {
+			onRequestPlay(videoId);
 			void el.play();
 		} else {
 			el.pause();
 		}
-	}, []);
+	}, [onRequestPlay, videoId]);
 
 	return (
-		<div className="group relative min-h-82.5 w-full">
+		<div className="group relative max-h-82.5 min-h-82.5 w-full">
 			<video
 				ref={videoRef}
 				src={src}
 				loop
+				autoPlay
 				muted
 				playsInline
 				controls={false}
-				onPlay={() => setIsPlaying(true)}
+				onPlay={() => {
+					setIsPlaying(true);
+					onRequestPlay(videoId);
+				}}
 				onPause={() => setIsPlaying(false)}
 				className="size-full object-cover"
-			/>
+			>
+				<track
+					kind="captions"
+					srcLang="en"
+					label="English captions"
+					src="data:text/vtt;charset=utf-8,WEBVTT"
+				/>
+			</video>
 			<button
 				type="button"
 				onClick={togglePlayback}
@@ -51,7 +81,7 @@ const testimonials = [
 		name: "Connor Caffery",
 		role: "Founder US platform",
 		video:
-			"https://res.cloudinary.com/dky0e8lq6/video/upload/Animation_Threes_-_4-3_hqjp94.mp4",
+			"https://res.cloudinary.com/dky0e8lq6/video/upload/testimonial-1_tj4ksc.mp4",
 		image: "/assets/testimonials/testimonial-1.png",
 	},
 	{
@@ -76,6 +106,7 @@ const MARQUEE_LOOP = [...testimonials, ...testimonials] as const;
 export const Testimonials = () => {
 	const { trackRef, onPointerEnter, onPointerLeave } =
 		useInfiniteMarquee<HTMLUListElement>();
+	const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
 
 	return (
 		<section
@@ -103,7 +134,12 @@ export const Testimonials = () => {
 							className="flex min-h-71.25 max-w-100 shrink-0 flex-col justify-between gap-4 bg-[#F9F9FA] p-6 sm:min-w-95"
 						>
 							{testimonial.video ? (
-								<TestimonialVideo src={testimonial.video} />
+								<TestimonialVideo
+									src={testimonial.video}
+									videoId={`${testimonial.name}-${index}`}
+									activeVideoId={activeVideoId}
+									onRequestPlay={setActiveVideoId}
+								/>
 							) : (
 								<p className="font-tertiary text-primary/70 leading-[1.4] tracking-[-3%]">
 									{testimonial.quote}

@@ -488,9 +488,7 @@ export const ImageGalleryProvider = ({
 
 	if (images.length === 0) {
 		return (
-			<ImageGalleryContext.Provider
-				value={{ images, isOpen: false, openAt }}
-			>
+			<ImageGalleryContext.Provider value={{ images, isOpen: false, openAt }}>
 				{children}
 			</ImageGalleryContext.Provider>
 		);
@@ -619,7 +617,7 @@ export const ImageGalleryProvider = ({
 													setActiveIndex(i);
 												}}
 												className={cn(
-													"relative block overflow-hidden rounded-md ring-2 transition focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/60",
+													"relative block cursor-pointer overflow-hidden rounded-md ring-2 transition focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/60",
 													i === activeIndex
 														? "ring-white"
 														: "opacity-55 ring-white/0 hover:opacity-100",

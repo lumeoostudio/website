@@ -165,6 +165,8 @@ body {
   html {
     @apply font-sans;
     scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: gray transparent;
   }
 }
 

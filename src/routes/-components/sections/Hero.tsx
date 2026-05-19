@@ -1,8 +1,8 @@
 import { useImageGallery } from "#/components/ImageGallery";
 import { AnimatedChartUpIcon } from "#/components/svg/AnimatedChartUpIcon";
 import { Button } from "#/components/ui/button";
-import { HERO_GALLERY_IMAGES } from "#/data/siteGallery";
 import { useInfiniteMarquee } from "#/hooks/useInfiniteMarquee";
+import { HERO_GALLERY_IMAGES } from "#/lib/utils";
 
 const HERO_MARQUEE_LOOP = [
 	...HERO_GALLERY_IMAGES,

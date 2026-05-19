@@ -1,6 +1,10 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 export const PRICING_PLANS = {
   product: [
     {
@@ -101,6 +105,24 @@ export type PricingPlan = {
   ctaLabel: string;
 };
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import type { GalleryImage } from "#/components/ImageGallery";
+
+/** Each `src` should have a matching `*-large.webp` for the lightbox (see `galleryModalImageSrc`). */
+const HERO_IMAGE_COUNT = 10;
+
+export const HERO_GALLERY_IMAGES: GalleryImage[] = Array.from({ length: HERO_IMAGE_COUNT }, (_, index) => ({
+  src: `/assets/hero/hero-${index + 1}.webp`,
+  alt: `Hero Carousel ${index + 1}`,
+}));
+
+export const WORKS_GALLERY_IMAGES: GalleryImage[] = [
+  ...HERO_GALLERY_IMAGES,
+  ...Array.from({ length: 18 }, (_, index) => ({
+    src: `/assets/our-works/works-${index + 1}.webp`,
+    alt: `Our Work ${index + 1}`,
+  })),
+];
+
+export const HERO_GALLERY_COUNT = HERO_GALLERY_IMAGES.length;
+
+export const SITE_GALLERY_IMAGES: GalleryImage[] = WORKS_GALLERY_IMAGES;

@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ImageGalleryProvider } from "#/components/ImageGallery";
-import {
-	HERO_GALLERY_COUNT,
-	SITE_GALLERY_IMAGES,
-} from "#/data/siteGallery";
+import { HERO_GALLERY_COUNT, SITE_GALLERY_IMAGES } from "#/lib/utils";
 import { Hero } from "./-components/sections/Hero";
 import { HowWeWork } from "./-components/sections/HowWeWork";
 import { OurWorks } from "./-components/sections/OurWorks";

@@ -201,7 +201,7 @@ export const Header = () => {
 
 	return (
 		<>
-			<nav className="sticky top-0 z-10 backdrop-blur-[5px]">
+			<nav className="sticky top-0 z-50 backdrop-blur-[5px]">
 				<div className="mx-auto flex w-full max-w-225 items-center justify-between px-6 py-4 sm:max-h-25 sm:min-h-25 sm:py-7">
 					<a href="#hero">
 						<img
@@ -260,8 +260,8 @@ export const Header = () => {
 				id="mobile-menu"
 				ref={overlayRef}
 				className={cn(
-					"fixed inset-0 z-50 flex flex-col bg-background px-6 pt-28 pb-10 md:hidden",
-					!isOpen && "pointer-events-none",
+					"fixed inset-0 z-20 flex flex-col bg-background px-6 pt-28 pb-10 md:hidden",
+					!isOpen && "pointer-events-none invisible opacity-0",
 				)}
 				aria-hidden={!isOpen}
 			>

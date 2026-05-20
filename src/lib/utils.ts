@@ -12,7 +12,7 @@ export const PRICING_PLANS = {
       description: "For teams who need a clear outcome, without extended commitment.",
       startingFromLabel: "STARTING FROM:",
       price: "$2,000",
-      developmentPrice: "$3,000+",
+      developmentPrice: "$2,500+",
       features: [
         "End-to-end product design across mobile, web, or desktop",
         "In-depth user research and UX strategy",
@@ -45,7 +45,7 @@ export const PRICING_PLANS = {
       description: "For teams who need a clear outcome, without extended commitment.",
       startingFromLabel: "STARTING FROM:",
       price: "$2,000",
-      developmentPrice: "$1,000",
+      developmentPrice: "$2,500+",
       features: ["High-converting single-page design", "Two distinct creative directions to choose from", "Conversion-focused copywriting included", "Delivered within 2-4 weeks"],
       ctaLabel: "Book a call",
     },

@@ -61,7 +61,7 @@ export const WhatWeOffer = () => {
 						{offers.map((offer, index) => (
 							<li
 								key={offer.title}
-								className="flex flex-col gap-16 bg-white p-6"
+								className="flex flex-col justify-between gap-16 bg-white p-6"
 							>
 								{index === 0 && <WhatWeOfferImage1 />}
 								{index === 1 && <WhatWeOfferImage2 />}
